@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app='civic-graph'>
+<html ng-app="civic-graph">
 <head>
     <title>Civic Graph</title>
     <base href='/'>
@@ -41,7 +41,7 @@
 
     <link rel='apple-touch-icon' href='img/apple-touch-icon.png'>
 </head>
-<body ng-controller='homeCtrl'>
+<body ng-controller='homeCtrl as homeCtrl'>
 <div ng-show="mobile" class="navLogoMobile">
     <img class="logoMob" src="img/civicgraph.png">
 </div>
@@ -52,6 +52,7 @@
                 ng-show='settingsEnabled'
                 id='settings'
                 toggle-network="status.isNetworkShown"
+                min-connections="minConnections"
         ></control>
 
         <div ng-if='settingsEnabled && !editing'
@@ -68,6 +69,7 @@
              ng-class="mobile ? 'searchMB bottomPopUpMb animateUp' : 'search'"
              class="form-group has-feedback"
              ng-hide="showAnalytics">
+
             <input type='text' ng-model='currentEntity'
                    typeahead='item as item.name for item in searchItems | filter:{name: $viewValue} | limitTo:8'
                    typeahead-on-select='selectItem($item)'

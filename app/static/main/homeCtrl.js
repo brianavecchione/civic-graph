@@ -38,6 +38,20 @@
             $scope.showAnalytics = !$scope.showAnalytics;
         };
 
+        this.minConnections = $scope.minConnections = 5;
+        var self = this;
+
+        $scope.$watch('minConnections', function() {
+            $scope.$broadcast('entitiesLoaded');
+        });
+
+
+        $scope.connectionChange = function () {
+            console.log(self.minConnections);
+            $scope.minConnections = self.minConnections;
+            $scope.$broadcast('entitiesLoaded');
+        };
+
         $scope.hydePartials = function (except) {
             if (except === "search") {
                 $scope.editing = false;
@@ -194,4 +208,5 @@
 
     angular.module('civic-graph')
         .controller('homeCtrl', homeDependencies);
+
 })(angular);
