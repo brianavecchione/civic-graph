@@ -10,13 +10,16 @@
 
     function controlDirective() {
         return {
-            templateUrl: '/control/controls.html',
+            templateUrl: '/js/control/controls.html',
             restrict   : 'E',
             scope      : {
-                toggleNetwork : '='
+                toggleNetwork : '=',
             },
             controller   : 'controlCtrl',
-            controllerAs : 'control'
+            controllerAs : 'control',
+            bindToController : {
+                minConnections : "="
+            }
         };
     }
 

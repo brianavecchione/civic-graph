@@ -2,12 +2,13 @@
 
     'use strict';
 
-    angular.module('civic-graph', ['ui.bootstrap', 'leaflet-directive', 'ngAnimate'])
+    angular.module('civic-graph')
         .constant('_', window._)
         .config(['$locationProvider', '$httpProvider', '$compileProvider',
             function ($locationProvider, $httpProvider, $compileProvider) {
                 $locationProvider.html5Mode(true);
                 $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+                $httpProvider.defaults.headers.common['Event-Name'] = 'Test_Event';
                 $compileProvider.debugInfoEnabled(true);
             }])
         .filter('thousandSuffix', function () {

@@ -1,16 +1,19 @@
 *~
-*.pyc
 .DS_Store
-civicenv
-/backups
-dump.rdb
 
 # Config files
 /config.py
 /secrets.py
 
+# Civic Graph UI
 /app/static/node_modules
 /app/static/build
+
+# Civic Graph Check In
+/checkin/node_modules
+/checkin/build
+
+# IDE files
 .idea
 
 # UWSGI related files
@@ -19,4 +22,5 @@ dump.rdb
 # Log files
 /log
 
-# Compiled python files
+# Compile Python files from uWSGI
+*.pyc
