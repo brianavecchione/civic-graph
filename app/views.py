@@ -5,7 +5,7 @@ from sqlalchemy import or_
 from werkzeug.security import check_password_hash
 
 from app import app, cache
-from app.api import update
+from app.api import update, getEventEntities, setEventData, getEventConnections
 from app.models import Entity, Edit, Category, Revenue, Expense, Fundingconnection, Dataconnection, \
     Collaboration, Employment, Relation
 from database import db
@@ -34,17 +34,37 @@ def requires_auth(f):
 
     return decorated
 
-
-@app.route('/api/entities')
+@app.route('/api/entities', methods=['GET'])
 @cache.memoize(timeout=None)
+
 def get_entities():
-    return jsonify(nodes=nodes())
+    data = nodes()
+    if 'Event-Name' in request.headers:
+        if 'Event-Data-Only' in request.headers:
+            return jsonify(nodes=getEventEntities(request.headers['Event-Name']))
+        else:
+            data += getEventEntities(request.headers['Event-Name'])
+    return jsonify(nodes=data)
 
 
 @app.route('/api/connections')
-@cache.memoize(timeout=None)
+#@cache.memoize(timeout=None)
+
 def get_connections():
-    return jsonify(connections=connections())
+    data = connections()
+    if 'Event-Name' in request.headers:
+        if 'Event-Data-Only' in request.headers:
+            return jsonify(connections=getEventConnections(request.headers['Event-Name']))
+        else:
+            data += getEventConnections(request.headers['Event-Name'])
+    return jsonify(connections=data)
+
+def save_event_data(request):
+    eventName = request.headers['Event-Name']
+    data = json.loads(request.data)['entity']
+    app.logger.debug(data)
+    setEventData(eventName, data)
+    cache.clear()
 
 
 def connections():
@@ -104,9 +124,16 @@ def relation_connections():
 
 
 @app.route('/api/save', methods=['POST'])
+
 def save():
+    jsonData = json.loads(request.data)
+    app.logger.debug(jsonData)
+    if 'Event-Name' in request.headers:
+        save_event_data(request)
+        if 'optOut' in jsonData and jsonData['optOut']:
+            return get_entities(request)
     entity = None
-    data = json.loads(request.data)['entity']
+    data = jsonData['entity']
     data["ip"] = request.remote_addr
     data["edit_type"] = None
     if data['id']:
